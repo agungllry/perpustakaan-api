@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Buku Perpustakaan</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        .btn-edit { background-color: #ffc107; }
+        .btn-edit:hover { background-color: #e0a800; }
+        .btn-delete { background-color: #dc3545; }
+        .btn-delete:hover { background-color: #c82333; }
+        .btn-cancel { background-color: #6c757d; }
+        .btn-cancel:hover { background-color: #5a6268; }
+        #formBuku {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .hidden { display: none; }
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Data Buku Perpustakaan</h1>
+
+        <div id="messageArea"></div>
+
+        <div id="formBuku">
+            <h2>Form Data Buku</h2>
+            <input type="hidden" id="bukuId">
+            <div class="form-group">
+                <label for="judul">Judul Buku:</label>
+                <input type="text" id="judul" name="judul" required>
+            </div>
+            <div class="form-group">
+                <label for="penulis">Penulis:</label>
+                <input type="text" id="penulis" name="penulis" required>
+            </div>
+            <div class="form-group">
+                <label for="tahunTerbit">Tahun Terbit:</label>
+                <input type="number" id="tahunTerbit" name="tahunTerbit" required>
+            </div>
+            <button type="button" id="btnSimpan">Simpan Buku</button>
+            <button type="button" id="btnUpdate" class="hidden">Update Buku</button>
+            <button type="button" id="btnBatal" class="hidden">Batal</button>
+        </div>
+
+        <h2>Daftar Buku</h2>
+        <button type="button" id="btnMuatUlang">Muat Ulang Data</button>
+        <table id="tabelBuku">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Judul</th>
+                    <th>Penulis</th>
+                    <th>Tahun Terbit</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // URL API Anda
+        const apiUrl = 'api.php'; // Pastikan ini mengarah ke file api.php Anda
+
+        // Fungsi untuk menampilkan pesan
+        function tampilkanPesan(pesan, tipe = 'success') {
+            const areaPesan = $('#messageArea');
+            areaPesan.html(`<div class="message ${tipe}">${pesan}</div>`);
+            setTimeout(() => areaPesan.html(''), 5000); // Hapus pesan setelah 5 detik
+        }
+
+        // Fungsi untuk memuat data buku dan menampilkannya di tabel
+        function muatDataBuku() {
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    let barisTabel = '';
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(function(buku) {
+                            barisTabel += `
+                                <tr>
+                                    <td>${buku.id}</td>
+                                    <td>${buku.judul}</td>
+                                    <td>${buku.penulis}</td>
+                                    <td>${buku.tahun_terbit}</td>
+                                    <td>
+                                        <button class="btn-edit" onclick="editBuku(${buku.id},'${buku.judul}','${buku.penulis}',${buku.tahun_terbit})">Edit</button>
+                                        <button class="btn-delete" onclick="hapusBuku(${buku.id})">Hapus</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        barisTabel = '<tr><td colspan="5" style="text-align:center;">Tidak ada data buku.</td></tr>';
+                    }
+                    $('#tabelBuku tbody').html(barisTabel);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error memuat data:", textStatus, errorThrown, jqXHR.responseText);
+                    tampilkanPesan('Gagal memuat data buku. Cek konsol untuk detail.', 'error');
+                    $('tabel_buku tbody').html('<tr><td colspan="5" style="text-align:center;">Gagal memuat data.</td></tr>');
+                }
+            });
+        }
+
+        // Fungsi untuk mereset form
+        function resetForm() {
+            $('#bukuId').val('');
+            $('#judul').val('');
+            $('#penulis').val('');
+            $('#tahunTerbit').val('');
+            $('#btnSimpan').removeClass('hidden');
+            $('#btnUpdate').addClass('hidden');
+            $('#btnBatal').addClass('hidden');
+        }
+
+        // Event handler untuk tombol Simpan Buku (Create)
+        $('#btnSimpan').on('click', function() {
+            const judul = $('#judul').val();
+            const penulis = $('#penulis').val();
+            const tahunTerbit = $('#tahunTerbit').val();
+
+            if (!judul || !penulis || !tahunTerbit) {
+                tampilkanPesan('Semua field harus diisi!', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: apiUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    judul: judul,
+                    penulis: penulis,
+                    tahun_terbit: parseInt(tahunTerbit)
+                }),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        tampilkanPesan(response.message || 'Data buku berhasil ditambahkan!');
+                        muatDataBuku();
+                        resetForm();
+                    } else {
+                        tampilkanPesan(response.message || 'Gagal menambahkan data.', 'error');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error menyimpan data:", textStatus, errorThrown, jqXHR.responseText);
+                    tampilkanPesan('Gagal menyimpan data. Cek konsol untuk detail.', 'error');
+                }
+            });
+        });
+
+        // Fungsi untuk menyiapkan form edit (dipanggil tombol Edit)
+        function editBuku(id, judul, penulis, tahunTerbit) {
+            $('#bukuId').val(id);
+            $('#judul').val(judul);
+            $('#penulis').val(penulis);
+            $('#tahunTerbit').val(tahunTerbit);
+
+            $('#btnSimpan').addClass('hidden');
+            $('#btnUpdate').removeClass('hidden');
+            $('#btnBatal').removeClass('hidden');
+            $('html, body').animate({ scrollTop: $("#formBuku").offset().top }, 500); // Scroll ke form
+        }
+
+        // Event handler untuk tombol Update Buku
+        $('#btnUpdate').on('click', function() {
+            const id = $('#bukuId').val();
+            const judul = $('#judul').val();
+            const penulis = $('#penulis').val();
+            const tahunTerbit = $('#tahunTerbit').val();
+
+            if (!id || !judul || !penulis || !tahunTerbit) {
+                tampilkanPesan('Semua field harus diisi untuk update!', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: apiUrl, // Sesuai dengan API, ID dikirim dalam body JSON
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: parseInt(id),
+                    judul: judul,
+                    penulis: penulis,
+                    tahun_terbit: parseInt(tahunTerbit)
+                }),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        tampilkanPesan(response.message || 'Data buku berhasil diupdate!');
+                        muatDataBuku();
+                        resetForm();
+                    } else {
+                        tampilkanPesan(response.message || 'Gagal mengupdate data.', 'error');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error update data:", textStatus, errorThrown, jqXHR.responseText);
+                    tampilkanPesan('Gagal mengupdate data. Cek konsol untuk detail.', 'error');
+                }
+            });
+        });
+
+        // Event handler untuk tombol Batal (saat edit)
+        $('#btnBatal').on('click', function() {
+            resetForm();
+        });
+
+        // Fungsi untuk menghapus buku (dipanggil tombol Hapus)
+        function hapusBuku(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
+                $.ajax({
+                    url: apiUrl, // Sesuai dengan API, ID dikirim dalam body JSON
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ id: parseInt(id) }),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            tampilkanPesan(response.message || 'Data buku berhasil dihapus!');
+                            muatDataBuku();
+                        } else {
+                            tampilkanPesan(response.message || 'Gagal menghapus data.', 'error');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error menghapus data:", textStatus, errorThrown, jqXHR.responseText);
+                        tampilkanPesan('Gagal menghapus data. Cek konsol untuk detail.', 'error');
+                    }
+                });
+            }
+        }
+
+        // Event handler untuk tombol Muat Ulang Data
+        $('#btnMuatUlang').on('click', function() {
+            muatDataBuku();
+            tampilkanPesan('Data dimuat ulang.');
+        });
+
+        // Muat data buku saat halaman pertama kali dimuat
+        $(document).ready(function() {
+            muatDataBuku();
+        });
+    </script>
+
+</body>
+</html>
