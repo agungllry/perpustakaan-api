@@ -1,27 +1,25 @@
 # Proyek API Perpustakaan - Manajemen Data Buku (PHP CRUD)
 
-**Versi:** 1.0.0
-**Tanggal Pembuatan:** 18 Mei 2025
-**Penulis:** [NAMA_ANDA] ([NIM_ANDA])
+**Penulis:** [BANGKIT AGUNG NUGROHO] ([A12.2023.07089])
 
 ## Daftar Isi
-1.  [Deskripsi Proyek](#deskripsi-proyek)
-2.  [Fitur Utama](#fitur-utama)
-3.  [Teknologi yang Digunakan](#teknologi-yang-digunakan)
-4.  [Struktur Folder Proyek](#struktur-folder-proyek)
-5.  [Prasyarat Instalasi](#prasyarat-instalasi)
-6.  [Panduan Instalasi dan Setup Lokal](#panduan-instalasi-dan-setup-lokal)
-7.  [Detail Endpoint API](#detail-endpoint-api)
-    * [7.1 Base URL](#71-base-url)
-    * [7.2 GET /api.php (Mendapatkan Semua Buku)](#72-get-apiphp-mendapatkan-semua-buku)
-    * [7.3 GET /api.php?id={id_buku} (Mendapatkan Buku Berdasarkan ID)](#73-get-apiphpidid_buku-mendapatkan-buku-berdasarkan-id)
-    * [7.4 POST /api.php (Menambahkan Buku Baru)](#74-post-apiphp-menambahkan-buku-baru)
-    * [7.5 PUT /api.php (Memperbarui Data Buku)](#75-put-apiphp-memperbarui-data-buku)
-    * [7.6 DELETE /api.php (Menghapus Buku)](#76-delete-apiphp-menghapus-buku)
-8.  [Antarmuka Pengguna (Frontend)](#antarmuka-pengguna-frontend)
-9.  [Contoh Pengujian dengan Postman](#contoh-pengujian-dengan-postman)
-10. [Skema Database](#skema-database)
-11. [Tips dan Pemecahan Masalah](#tips-dan-pemecahan-masalah)
+1.  [Deskripsi Proyek]
+2.  [Fitur Utama]
+3.  [Teknologi yang Digunakan]
+4.  [Struktur Folder Proyek]
+5.  [Prasyarat Instalasi]
+6.  [Panduan Instalasi dan Setup Lokal]
+7.  [Detail Endpoint API]
+    * [7.1 Base URL]
+    * [7.2 GET /api.php (Mendapatkan Semua Buku)]
+    * [7.3 GET /api.php?id={id_buku} (Mendapatkan Buku Berdasarkan ID)]
+    * [7.4 POST /api.php (Menambahkan Buku Baru)]
+    * [7.5 PUT /api.php (Memperbarui Data Buku)]
+    * [7.6 DELETE /api.php (Menghapus Buku)]
+8.  [Antarmuka Pengguna (Frontend)]
+9.  [Contoh Pengujian dengan Postman]
+10. [Skema Database]
+11. [Tips dan Pemecahan Masalah]
 
 ---
 
