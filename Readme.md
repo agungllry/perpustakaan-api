@@ -22,8 +22,6 @@
 9.  [Contoh Pengujian dengan Postman](#contoh-pengujian-dengan-postman)
 10. [Skema Database](#skema-database)
 11. [Tips dan Pemecahan Masalah](#tips-dan-pemecahan-masalah)
-12. [Kontribusi](#kontribusi)
-13. [Lisensi](#lisensi)
 
 ---
 
@@ -377,15 +375,3 @@ Perintah SQL untuk membuat tabel ini tersedia di file `tabel_buku.sql`.
 * **CORS Policy Error (jika frontend dan backend di domain/port berbeda)**: Proyek ini dirancang untuk berjalan di domain yang sama, sehingga CORS seharusnya tidak menjadi masalah. Jika Anda memisahkannya, Anda perlu menambahkan header CORS di `api.php` (misalnya, `header("Access-Control-Allow-Origin: *");`).
 * **Pastikan `Content-Type: application/json`** dikirim oleh API dan digunakan oleh klien saat mengirim data JSON (POST/PUT).
 * Selalu lakukan **Hard Refresh** (Ctrl+Shift+R atau Cmd+Shift+R) di browser setelah melakukan perubahan pada file JavaScript atau CSS untuk menghindari masalah cache.
-
-## 12. Kontribusi
-
-Saat ini, kontribusi untuk proyek ini tidak dibuka secara formal. Namun, Anda bebas untuk melakukan fork repositori ini dan mengembangkannya lebih lanjut untuk keperluan belajar atau proyek pribadi.
-
-## 13. Lisensi
-
-Proyek ini dilisensikan di bawah [MIT License](LICENSE.txt) (jika Anda menambahkan file LICENSE.txt). Jika tidak, Anda bisa menyatakan "Proyek ini disediakan apa adanya untuk tujuan edukasi."
-
----
-
-_README ini dibuat pada: [Tanggal dan Waktu Saat Ini, contoh: 18 Mei 2025, 03:20 WIB]_
